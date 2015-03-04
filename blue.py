@@ -1,3 +1,6 @@
+# code to read and interpret mindwave data
+
+
 import bluetooth
 import time
 from threading import Thread
@@ -14,8 +17,9 @@ def find_devices():
     print len(device_list)
     while len(device_list) == 0:
         print "inside "
+        print device_list
         device_list=bluetooth.discover_devices(lookup_names= True)
-
+    print device_list
     for address,name in device_list:
         print address,name
         if name == 'MindWave Mobile':
@@ -41,6 +45,7 @@ def fill_mindwave_data(data_queue):
         if (connect):
             while True:
 
+
                 sock_data= sock.recv(100)
 
 
@@ -63,10 +68,23 @@ while True:
         packet = []
         if data_queue.get() == 170:
             if data_queue.get() == 170:
-                packet = [170,170]+[data_queue.get() for i in range(6)]
-        if len(packet) > 5:
-            if packet[3] == 2:
-                print "poor signal detected"
+                packet_length = data_queue.get()
+                packet = [data_queue.get() for i in range(packet_length)]
+
+                if packet[0] == 2:
+                    print 'special packet'
+                    print packet
+                    print "              "
+                    print "              "
+                    if packet[1]== 200:
+                        print "SIGNAL QUALITY : POOR"
+                    else:
+                        print "SIGNAL QUALITY : GOOD"
+                    print "MEDITATION :",packet[packet_length-1]
+                    print "FOCUS :",packet[packet_length - 3]
+
+
+
 
 
 
