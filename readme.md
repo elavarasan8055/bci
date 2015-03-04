@@ -1,0 +1,1 @@
+http://wearcam.org/ece516/mindset_communications_protocol.pdf
